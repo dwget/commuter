@@ -1,0 +1,160 @@
+@import url('https://googleapis.com');
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    user-select: none; /* Защита от выделения синим при частых кликах и скролле */
+    -webkit-user-select: none;
+}
+
+body, html { 
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden; 
+    background: #e2d6c5; 
+    font-family: 'PT Serif', serif;
+}
+
+/* Контейнер бесконечного скролла */
+#textContainer {
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden; /* Чтобы слова при вылетах не создавали боковой скролл */
+    /* Ваша журнальная сетка: отступ слева 22% (15% + 7%), справа 15% */
+    padding: 15vh 15% 25vh 22%; 
+    
+    /* Эстетика текстурной крафт-бумаги с белоснежной полосой 7% слева */
+    background-color: #e2d6c5; 
+    background-image: 
+        radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0),
+        linear-gradient(to right, rgba(0,0,0,0.01) 1px, transparent 1px),
+        linear-gradient(to right, #ffffff 7%, transparent 7%);
+    
+    background-position: 7% 0, 7% 0, 0 0;
+    background-size: 4px 4px, 100% 100%, 100% 100%;
+    background-repeat: repeat, no-repeat, no-repeat;
+    
+    color: #111111; 
+    scroll-behavior: smooth;
+}
+
+/* Стартовый оверлей */
+#overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: #ffffff; 
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    z-index: 10; 
+    transition: opacity 0.5s ease;
+}
+
+.btn {
+    padding: 15px 35px; 
+    border: 4px solid #000000; 
+    font-size: 18px;
+    font-weight: 900; 
+    background: transparent; 
+    color: #000000; 
+    cursor: pointer;
+    font-family: 'Unbounded', sans-serif; 
+    text-transform: uppercase;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn:hover { 
+    background: #000000; 
+    color: #ffffff; 
+}
+
+/* Абзацы (100% черный брутальный графит) */
+.text-block {
+    margin-bottom: 6rem; 
+    text-align: justify; 
+    text-justify: inter-word;
+    opacity: 1;
+    word-break: break-all; /* Разрывает длинные монолитные строки на краях */
+}
+
+/* Автономные слова-ноды */
+.word-node {
+    display: inline-block;
+    margin-right: 10px;  
+    font-weight: 900;    
+    will-change: transform;
+    transition: color 0.15s ease;
+}
+
+/* 30% интерактивных слов */
+.word-node.chaotic {
+    border-bottom: 1px dotted rgba(17, 17, 17, 0.4);
+}
+
+/* --- ТРИГГЕРЫ ПРИ СКРОЛЛЕ (Рассинхронизированы через --rand-delay) --- */
+.effect-buzz .word-node {
+    animation: wordBuzz 0.25s infinite steps(2);
+    animation-delay: var(--rand-delay);
+}
+@keyframes wordBuzz {
+    0% { transform: translate(1px, 0px); }
+    50% { transform: translate(-1px, 1px); }
+}
+
+.effect-glitch-x .word-node {
+    animation: wordGlitch 2s infinite alternate;
+    animation-delay: var(--rand-delay);
+}
+@keyframes wordGlitch {
+    0%, 96% { transform: translateX(0); }
+    98% { transform: translateX(12px) skewX(10deg); color: #ff0055; }
+    100% { transform: translateX(-6px); color: #00ffcc; }
+}
+
+.effect-smooth .word-node {
+    animation: wordSmooth 2.5s infinite ease-in-out alternate;
+    animation-delay: var(--rand-delay);
+}
+@keyframes wordSmooth {
+    0% { transform: translateY(-3px); }
+    100% { transform: translateY(3px); }
+}
+
+.effect-spiral-block {
+    border-left: 6px solid #111111;
+    padding-left: 25px;
+}
+.effect-spiral-block .word-node {
+    animation: wordSpiral 6s infinite linear;
+    animation-delay: var(--rand-delay);
+}
+@keyframes wordSpiral {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Возвышенные барочные ASCII-разделители */
+.ascii-divider {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 900;
+    color: #111111;
+    margin: 12rem auto;
+    white-space: pre;
+    display: block;
+    width: fit-content;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    transition: all 1.2s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+.ascii-divider.active-ascii {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
